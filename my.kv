@@ -1,0 +1,47 @@
+<MyGrid>:
+
+    loc:loc
+    time:time
+    numOfRec:numOfRec
+
+    GridLayout:
+        cols:1
+        size: root.width , root.height - 200
+        pos:0,200
+
+        BoxLayout:
+            orientation:'horizontal'
+
+            Label:
+                text:"Current Location"
+
+            TextInput:
+                id:loc
+                multiline:False
+                size_hint: (1, None)
+
+        BoxLayout:
+
+            Label:
+                text:"Time you want to spent on the trip?"
+
+            TextInput:
+                id:time
+                multiline:False
+                size_hint: (1, None)
+
+        BoxLayout:
+
+            Label:
+                text:"how many recommendation you want to get?"
+
+            TextInput:
+                id:numOfRec
+                multiline:False
+                size_hint: (1, None)
+
+
+    Button:
+        text:"Submit"
+        size: root.width,root.height-400
+        on_press: root.btn()
