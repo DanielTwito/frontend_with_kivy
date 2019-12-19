@@ -9,39 +9,65 @@
         size: root.width , root.height - 200
         pos:0,200
 
+        orientation: 'horizontal'
+        canvas:
+            Rectangle:
+                source: '1.jpg'
+                size: self.size
+                pos: self.pos
+
         BoxLayout:
             orientation:'horizontal'
 
             Label:
                 text:"Current Location"
+                font_size:20
+                markup:True
+                bold:True
+
+
 
             TextInput:
                 id:loc
                 multiline:False
                 size_hint: (1, None)
+                halign: 'center'
 
         BoxLayout:
 
             Label:
                 text:"Time you want to spent on the trip?"
+                font_size:20
+                bold:True
+
 
             TextInput:
                 id:time
                 multiline:False
                 size_hint: (1, None)
+                halign: 'center'
+
 
         BoxLayout:
 
             Label:
-                text:"how many recommendation you want to get?"
+                text:"how many recommendation\nyou want to get?"
+                bold:True
+                font_size:20
+                halign: 'left'
+
+
+
 
             TextInput:
                 id:numOfRec
                 multiline:False
                 size_hint: (1, None)
+                halign: 'center'
 
 
     Button:
         text:"Submit"
-        size: root.width,root.height-400
-        on_press: root.btn()
+        size: root.width,root.height/3
+        font_size:30
+        on_press: root.submit_btn_handler()
