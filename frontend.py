@@ -33,12 +33,14 @@ class MyGrid(Widget):
         self.database=Database()
 
     def submit_btn_handler(self):
-        print("location: ",self.loc.text,"time: ",self.time.text,"Recommendation number: ",self.numOfRec.text)
-        valid_input = self.validate_input(self.loc.text,self.time.text,self.numOfRec.text)
+        loc = self.loc.text
+        time = self.time.text
+        nor = self.numOfRec.text
+        print("location: ",loc,"time: ",time,"Recommendation number: ",nor)
+        valid_input = self.validate_input(loc,time,nor)
         if not valid_input:
             return
-        x=self.database.recommand(self.numOfRec)
-        print(x )
+        x=self.database.recommand(loc,time,nor)
 
         self.loc.text=""
         self.time.text=""

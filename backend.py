@@ -38,5 +38,38 @@ class Database():
         ans = loc.lower() in self.loclist
         return ans
 
-    def recommand(self, numOfRec):
-        return ["test1","test2","test3"]
+    def recommand(self, loc,time,nor):
+        col_name=["index",
+                  "TripDuration",
+                  "StartTime",
+                  "StopTime",
+                  "StartStationID",
+                  "StartStationName",
+                  "StartStationLatitude",
+                  "StartStationLongitude",
+                  "EndStationID",
+                  "EndStationName",
+                  "EndStationLatitude",
+                  "EndStationLongitude",
+                  "BikeID",
+                  "UserType",
+                  "BirthYear",
+                  "Gender",
+                  "TripDurationinmin"]
+        low=int(time)-30
+        high=int(time)+30
+        cur = self.conn.cursor()
+        li1 = cur.execute("""
+                            SELECT * FROM BikesInfo_tbl
+                            WHERE StartStationName =? AND 
+                            TripDuration Between ? AND ?""",(loc,low,high)
+                          ).fetchall()
+        res = pd.DataFrame(li1,columns=col_name)
+        popularity={}
+        for i, row in res.iterrows():
+            index = row["EndStationName"]
+            if index in popularity:
+                popularity[index]+=1
+            else:
+                popularity[index]=1
+        print(popularity)
