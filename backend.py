@@ -59,10 +59,14 @@ class Database():
         low=int(time)-30
         high=int(time)+30
         cur = self.conn.cursor()
+        df= pd.read_csv("loc_neighbor.csv")
+        tmp = loc
+        loc = df[loc].tolist()
+        loc.append(tmp)
         li1 = cur.execute("""
                             SELECT * FROM BikesInfo_tbl
-                            WHERE StartStationName =? AND 
-                            TripDuration Between ? AND ?""",(loc,low,high)
+                            WHERE StartStationName =? OR StartStationName =? OR StartStationName =? OR StartStationName =?  AND 
+                            TripDuration Between ? AND ?""",(loc[0],loc[1],loc[2],loc[3],low-2,high+2)
                           ).fetchall()
         res = pd.DataFrame(li1,columns=col_name)
         popularity={}
@@ -72,4 +76,7 @@ class Database():
                 popularity[index]+=1
             else:
                 popularity[index]=1
-        print(popularity)
+        sorted_p = list(map(lambda t: t[0], sorted(popularity.items(), key=lambda kv: kv[1])))
+        ans = sorted_p[:min(int(nor),len(sorted_p))]
+        print(loc)
+        print(ans)
