@@ -38,7 +38,14 @@ class Database():
         ans = loc.lower() in self.loclist
         return ans
 
-    def recommand(self, loc,time,nor):
+    def recommend(self, loc, time, nor):
+        """
+        this function makes a recommendation for the user based on the location,duration time
+        :param loc: current location of the user
+        :param time: duration time the user want to spent
+        :param nor: number of recommendation the user want to get
+        :return: list of location
+        """
         col_name=["index",
                   "TripDuration",
                   "StartTime",
@@ -78,5 +85,4 @@ class Database():
                 popularity[index]=1
         sorted_p = list(map(lambda t: t[0], sorted(popularity.items(), key=lambda kv: kv[1])))
         ans = sorted_p[:min(int(nor),len(sorted_p))]
-        print(loc)
-        print(ans)
+        return ans

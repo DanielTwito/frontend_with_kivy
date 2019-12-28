@@ -1,8 +1,9 @@
 """
-this code is for pre-processing
-on the data in this script we query the data base and search
+This code is for pre-processing
+on the data.
+In this Script, we query the database and search
 for 3 closest neighbors for each Stat station
-this information is save in csv file to help us in the recommendation algorithm.
+this information is saved in the CSV file to help us in the recommendation algorithm.
 """
 
 from backend import Database
@@ -21,39 +22,50 @@ class Point():
         return "( "+str(self.x)+", "+str(self.y)+" )"
 
 
-def get_loc():
-    d=Database()
+def get_location():
+    """
+    This function returns a dictionary with key as location and value as a list of its 3 closest
+    neighbors
+    :return: dictionary {key=location: value = [3 closest neighbors]
+    """
+    database=Database()
     col_name = [
                 "StartStationName",
                 "StartStationLatitude",
                 "StartStationLongitude"]
-    cur = d.conn.cursor()
-    li1 = cur.execute("""SELECT DISTINCT StartStationName,StartStationLatitude,StartStationLongitude FROM BikesInfo_tbl""")\
+    cursor = database.conn.cursor()
+    query_result = cursor.execute("""SELECT DISTINCT StartStationName,StartStationLatitude,StartStationLongitude FROM BikesInfo_tbl""")\
                         .fetchall()
-    res = pd.DataFrame(li1, columns=col_name)
-    loc = {}
-    for i, row in res.iterrows():
-        index = row["StartStationName"]
-        x=row["StartStationLatitude"]
-        y=row["StartStationLongitude"]
-        loc[index] = Point(float(x),float(y))
-    loc_neighbor={}
-    for i in loc:
-        loc_neighbor[i]=get_neighbor((i, loc[i]), loc)
-        # break
-    return loc_neighbor
+    result = pd.DataFrame(query_result, columns=col_name)
+    locations = {}
+    for location, row in result.iterrows():
+        start_location = row["StartStationName"]
+        latitude=row["StartStationLatitude"]
+        longtitude=row["StartStationLongitude"]
+        locations[start_location] = Point(float(latitude),float(longtitude))
+    location_neighbor={}
+    for location in locations:
+        location_neighbor[location]=get_neighbor((location, locations[location]), locations)
+    return location_neighbor
 
-def get_neighbor(curr, loc):
-    n={}
-    for key in loc:
-        if curr[0] == key:
+def get_neighbor(current_location, locations):
+    """
+    Get a current location and calculate the distance
+    between all the other locations and return a list of the 3 closest location
+    :param current_location: given location
+    :param locations: all the locations and its geo-location data
+    :return:
+    """
+    neighbors={}
+    for location in locations:
+        if current_location[0] == location:
             continue
-        n[key]=curr[1].get_distance(loc[key])
-    sorted_n = list(map(lambda t:t[0],sorted(n.items(), key=lambda kv: kv[1])))[:3]
+        neighbors[location]=current_location[1].get_distance(locations[location])
+    sorted_n = list(map(lambda t:t[0], sorted(neighbors.items(), key=lambda kv: kv[1])))[:3]
     return sorted_n
 
 
-d=get_loc()
+d=get_location()
 lbl=d.keys()
 df=pd.DataFrame(d,columns=lbl)
 df.to_csv("loc_neighbor.csv")
