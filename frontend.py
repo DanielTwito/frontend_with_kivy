@@ -54,7 +54,7 @@ class MyGrid(Widget):
         recommendation_list = self.database.recommend(loc, time, nor)
         popup = MyPopup()
         popup.set_title("System Recommendation")
-        popup.set_msg("\n".join(recommendation_list))
+        popup.set_msg("We Recommend you to travel to:\n"+"\n".join(recommendation_list))
         popup.open()
         self.loc.text=""
         self.time.text=""
